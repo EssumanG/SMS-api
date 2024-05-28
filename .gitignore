@@ -1,0 +1,12 @@
+# Environments  
+env/ 
+
+# Visual Studio Code # 
+.vscode/* 
+--pycahche
+
+# Python #
+__pycache__/
+
+
+db.sqlite3
