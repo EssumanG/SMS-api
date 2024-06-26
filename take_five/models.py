@@ -29,7 +29,7 @@ class Control(models.Model):
 class HazardControl(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     harzard_description = models.CharField(max_length=100)
-    control = models.ManyToManyField(Control, null=False)
+    controls = models.ManyToManyField(Control)
 
     def __repr__(self) -> str:
         return self.harzard_description

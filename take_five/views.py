@@ -9,16 +9,16 @@ from rest_framework import status, mixins, generics
 # Create your views here.
 class CreateListTask(GenericAPIView):
 
-    serializer_class = TaskSerializer
+    serializer_class = TaskSerializer 
     queryset = Task.objects.all()
-    get_serializer_class = GetTaskSerializer
+    
     # empolyee_queryset = Employee.objects.all()
     # hazard_queryset = HazardControl.objects.all()
 
     def get(self, request):
         tasks = self.get_queryset()
 
-        serializer = self.get_serializer_class(tasks, many = True)
+        serializer = GetTaskSerializer(tasks, many = True)
         response = {
             "msg": "lists of all tasks",
             "data": serializer.data
@@ -57,6 +57,17 @@ class CreateListEmployee(mixins.ListModelMixin, mixins.CreateModelMixin, Generic
 class CreateListHazard(mixins.ListModelMixin, mixins.CreateModelMixin, GenericAPIView):
     queryset = HazardControl.objects.all()
     serializer_class = HazardControlSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+    
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+    
+class CreateListControl(mixins.ListModelMixin, mixins.CreateModelMixin, GenericAPIView):
+    queryset = Control.objects.all()
+    serializer_class = ControlSerializer
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)

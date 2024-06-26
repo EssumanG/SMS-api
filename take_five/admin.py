@@ -7,4 +7,5 @@ from .models import *
 admin.site.register(Employee)
 admin.site.register(HazardControl)
 admin.site.register(Task)
+admin.site.register(Control)
 
