@@ -14,18 +14,29 @@ class Employee (models.Model):
     def __str__(self) -> str:
         return self.name
     
+class Control(models.Model):
+    id = models.UUIDField(primary_key=True,default=uuid.uuid4, editable=False)
+    control_description = models.CharField(max_length=100)
+
+    def __repr__(self) -> str:
+        return self.control_description
+    
+    def __str__(self) -> str:
+        return self.control_description
+    
+
 
 class HazardControl(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     harzard_description = models.CharField(max_length=100)
-    risk = models.CharField(max_length = 100)
-    control = models.CharField(max_length = 100)
+    control = models.ManyToManyField(Control, null=False)
 
     def __repr__(self) -> str:
         return self.harzard_description
     
     def __str__(self) -> str:
         return self.harzard_description
+    
 
 class Task(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

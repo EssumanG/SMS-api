@@ -11,13 +11,14 @@ class CreateListTask(GenericAPIView):
 
     serializer_class = TaskSerializer
     queryset = Task.objects.all()
-    empolyee_queryset = Employee.objects.all()
-    hazard_queryset = HazardControl.objects.all()
+    get_serializer_class = GetTaskSerializer
+    # empolyee_queryset = Employee.objects.all()
+    # hazard_queryset = HazardControl.objects.all()
 
     def get(self, request):
         tasks = self.get_queryset()
 
-        serializer = self.serializer_class(tasks, many = True)
+        serializer = self.get_serializer_class(tasks, many = True)
         response = {
             "msg": "lists of all tasks",
             "data": serializer.data
