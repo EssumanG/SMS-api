@@ -33,6 +33,11 @@ class TaskSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class GetHazardControlSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HazardControl
+        fields = ['id', 'harzard_description']
+
 class GetTaskSerializer(serializers.ModelSerializer):
     # serializers.ManyRelatedField
     created_by =  EmployeeSerializer()

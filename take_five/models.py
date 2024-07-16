@@ -46,6 +46,16 @@ class Task(models.Model):
     other_workers = models.ManyToManyField(Employee, related_name='task_members')
     supervisor = models.ForeignKey(Employee, models.SET_NULL, null=True, related_name='task_supervisor')
     hazard = models.ManyToManyField(HazardControl)
+    question_empolyee = models.BooleanField(null=False, default=True)
+    question_competency = models.BooleanField(null=False, default=True)
+    question_tools_and_equip = models.BooleanField(null=False, default=True)
+    question_5A = models.BooleanField(null=True)
+    question_5B = models.BooleanField(null=True)
+    question_5C = models.BooleanField(null=True)
+    question_5D = models.BooleanField(null=True)
+    question_5E = models.BooleanField(null=True)
+
+
 
     def __repr__(self) -> str:
         return self.task_name
