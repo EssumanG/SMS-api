@@ -18,7 +18,7 @@ class CreateListTask(GenericAPIView):
     def get(self, request):
         tasks = self.get_queryset()
 
-        serializer = GetTaskSerializer(tasks, many = True)
+        serializer = self.serializer_class(tasks, many = True)
         response = {
             "msg": "lists of all tasks",
             "data": serializer.data
@@ -56,7 +56,7 @@ class CreateListEmployee(mixins.ListModelMixin, mixins.CreateModelMixin, Generic
 
 class CreateListHazard(mixins.ListModelMixin, mixins.CreateModelMixin, GenericAPIView):
     queryset = HazardControl.objects.all()
-    serializer_class = HazardControlSerializer
+    serializer_class = GetHazardControlSerializer
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)

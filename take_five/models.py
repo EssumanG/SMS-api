@@ -28,14 +28,14 @@ class Control(models.Model):
 
 class HazardControl(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    harzard_description = models.CharField(max_length=100)
-    controls = models.ManyToManyField(Control)
+    hazard_description = models.CharField(max_length=100)
+    control = models.ManyToManyField(Control)
 
     def __repr__(self) -> str:
-        return self.harzard_description
+        return self.hazard_description
     
     def __str__(self) -> str:
-        return self.harzard_description
+        return self.hazard_description
     
 
 class Task(models.Model):
@@ -45,7 +45,7 @@ class Task(models.Model):
     created_by = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='task_inittiator')
     other_workers = models.ManyToManyField(Employee, related_name='task_members')
     supervisor = models.ForeignKey(Employee, models.SET_NULL, null=True, related_name='task_supervisor')
-    hazard = models.ManyToManyField(HazardControl)
+    hazard_control_list = models.ManyToManyField(HazardControl)
     question_empolyee = models.BooleanField(null=False, default=True)
     question_competency = models.BooleanField(null=False, default=True)
     question_tools_and_equip = models.BooleanField(null=False, default=True)
