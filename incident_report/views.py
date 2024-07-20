@@ -18,7 +18,7 @@ class CreateListView(GenericAPIView):
 
         serializer = self.serializer_class(reports, many = True)
         response = {
-            "msg": "lists of all incident Report",
+            "msg": "lists of all incident Reports",
             "data": serializer.data
         }
 
@@ -29,6 +29,7 @@ class CreateListView(GenericAPIView):
         #take the response
         req = request.data
 
+    # TODO: check the date and time befor saving
         serializer = self.serializer_class(data=req)
         if serializer.is_valid():
             serializer.save()
