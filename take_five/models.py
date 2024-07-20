@@ -1,22 +1,12 @@
 from django.db import models
 import uuid
+import datetime
 
-# Create your models here.
-class Employee (models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    employee_number = models.CharField(max_length=100)
-    name =  models.CharField(max_length=100)
-    department = models.CharField(max_length=100)
-
-    def __repr__(self) -> str:
-        return self.name
-    
-    def __str__(self) -> str:
-        return self.name
+from employee.models import Employee
     
 class Control(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4, editable=False)
-    control_description = models.CharField(max_length=100)
+    control_description = models.CharField(max_length=100, null=False)
 
     def __repr__(self) -> str:
         return self.control_description
@@ -28,7 +18,7 @@ class Control(models.Model):
 
 class HazardControl(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    hazard_description = models.CharField(max_length=100)
+    hazard_description = models.CharField(max_length=100, null=False)
     control = models.ManyToManyField(Control)
 
     def __repr__(self) -> str:
@@ -38,10 +28,11 @@ class HazardControl(models.Model):
         return self.hazard_description
     
 
+
 class Task(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    task_name = models.CharField(max_length = 100)
-    location = models.CharField(max_length = 100)
+    task_name = models.CharField(max_length = 100, null=False)
+    location = models.CharField(max_length = 100, null=False)
     created_by = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='task_inittiator')
     other_workers = models.ManyToManyField(Employee, related_name='task_members')
     supervisor = models.ForeignKey(Employee, models.SET_NULL, null=True, related_name='task_supervisor')
@@ -54,6 +45,7 @@ class Task(models.Model):
     question_5C = models.BooleanField(null=True)
     question_5D = models.BooleanField(null=True)
     question_5E = models.BooleanField(null=True)
+    date_created = models.DateField(default=datetime.datetime.now)
 
 
 

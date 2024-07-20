@@ -42,16 +42,7 @@ class CreateListTask(GenericAPIView):
         #check if users and harzards are already in the database
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-class CreateListEmployee(mixins.ListModelMixin, mixins.CreateModelMixin, GenericAPIView):
-    queryset = Employee.objects.all()
-    serializer_class = EmployeeSerializer
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-    
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
 
 
 class CreateListHazard(mixins.ListModelMixin, mixins.CreateModelMixin, GenericAPIView):
