@@ -27,12 +27,7 @@ class CreateListView(GenericAPIView):
     
 
     def post(self, request):
-        #take the response
-
-        # req = request.data
-        # print(req)
-
-    # TODO: check the date and time befor saving
+        
 
         time_of_incident = request.data['time_of_incident']
         time_of_incident = datetime.datetime.strptime(time_of_incident, '%H:%M').time()
@@ -43,6 +38,4 @@ class CreateListView(GenericAPIView):
 
             return Response( serializer.data, status=status.HTTP_201_CREATED)
             
-        #check if users and harzards are already in the database
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        # return Response({'request': request.data})
