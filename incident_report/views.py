@@ -4,6 +4,7 @@ from .serializers import IncidentReportSerializer
 from .models import IncidentReport
 from rest_framework.response import Response
 from rest_framework import status
+import datetime
 
 
 
@@ -27,10 +28,16 @@ class CreateListView(GenericAPIView):
 
     def post(self, request):
         #take the response
-        req = request.data
+
+        # req = request.data
+        # print(req)
 
     # TODO: check the date and time befor saving
-        serializer = self.serializer_class(data=req)
+
+        time_of_incident = request.data['time_of_incident']
+        time_of_incident = datetime.datetime.strptime(time_of_incident, '%H:%M').time()
+        request.data['time_of_incident'] = time_of_incident
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
 
@@ -38,3 +45,4 @@ class CreateListView(GenericAPIView):
             
         #check if users and harzards are already in the database
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # return Response({'request': request.data})
