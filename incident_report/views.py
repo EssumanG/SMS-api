@@ -14,12 +14,13 @@ class CreateListView(GenericAPIView):
     serializer_class = IncidentReportSerializer
     queryset = IncidentReport.objects.all()
 
-    def get(self, request):
+    def get(self):
         reports = self.get_queryset()
 
         serializer = self.serializer_class(reports, many = True)
         response = {
             "msg": "lists of all incident Reports",
+            "total": len(serializer.data),
             "data": serializer.data
         }
 

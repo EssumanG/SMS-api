@@ -89,7 +89,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'sms_db',
         'USER': 'postgres',
-        'PASSWORD': 'kojo@1234',
+        'PASSWORD': 'kojo1234',
         'HOST': '127.0.0.1',
         'PORT': '5432'
     }

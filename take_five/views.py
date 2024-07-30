@@ -43,6 +43,16 @@ class CreateListTask(GenericAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
+class TaskDetailView(mixins.RetrieveModelMixin, mixins.DestroyModelMixin, GenericAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskDetialSerializer
+    lookup_field = 'id'
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)    
 
 
 class CreateListHazard(mixins.ListModelMixin, mixins.CreateModelMixin, GenericAPIView):

@@ -60,10 +60,10 @@ class HazardControlSerializer(serializers.ModelSerializer):
 
 class TaskSerializer(serializers.ModelSerializer):
     # For reading nested relationships
-    created_by = EmployeeSerializer(read_only=True)
-    hazard_control_list = HazardControlSerializer(many=True, read_only=True)
-    other_workers = EmployeeSerializer(many=True, read_only=True)
-    supervisor = EmployeeSerializer(read_only=True)
+    # created_by = EmployeeSerializer(read_only=True)
+    # hazard_control_list = HazardControlSerializer(many=True, read_only=True)
+    # other_workers = EmployeeSerializer(many=True, read_only=True)
+    # supervisor = EmployeeSerializer(read_only=True)
 
     # For writing nested relationships using primary keys
     created_by_id = serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all(),  write_only=True)
@@ -71,17 +71,42 @@ class TaskSerializer(serializers.ModelSerializer):
     other_workers_id = serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all(),  many=True, write_only=True)
     supervisor_id = serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all(),  write_only=True)
 
+    other_workers_count = serializers.SerializerMethodField()
+    hazard_control_count = serializers.SerializerMethodField()
+
+    created_by_name = serializers.SerializerMethodField()
+    supervisor_name = serializers.SerializerMethodField()
+
     class Meta:
         model = Task
-        fields =  ['id','task_name', 'location', 'created_by', 'created_by_id', 'other_workers', 'other_workers_id','supervisor', 'supervisor_id', 'hazard_control_list', 'hazard_control_list_id', 'question_empolyee', 'question_competency', 'question_tools_and_equip', 'question_5A', 'question_5B', 'question_5C', 'question_5D', 'question_5E']
+        fields =  ['id','task_name', 'location', 'created_by_name', 
+                   'created_by_id', 'other_workers_id','supervisor_name', 
+                   'supervisor_id', 'hazard_control_list_id', 
+                   'question_empolyee', 'question_competency', 'question_tools_and_equip', 
+                   'question_5A', 'question_5B', 'question_5C', 'question_5D', 'question_5E',
+                   'other_workers_count', 'hazard_control_count']
         # fields =  ['id','task_name', 'location', 'created_by', 'other_workers','supervisor', 'hazard_control_list', 'question_empolyee', 'question_competency', 'question_tools_and_equip', 'question_5A', 'question_5B', 'question_5C', 'question_5D', 'question_5E']
         
-        extra_kwargs = {
-            'created_by': {'read_only': True},
-            'hazard_control_list': {'read_only': True},
-            'other_workers': {'read_only': True},
-            'supervisor': {'read_only': True},
-        }
+        # extra_kwargs = {
+        #     'created_by': {'read_only': True},
+        #     'hazard_control_list': {'read_only': True},
+        #     # 'other_workers': {'read_only': True},
+        #     # 'supervisor': {'read_only': True},
+        #     'other_workers_count': {'read_only': True},
+        #     'hazard_control_count': {'read_only': True},
+        # }
+    
+    def get_other_workers_count(self, obj):
+        return obj.other_workers.count()
+
+    def get_hazard_control_count(self, obj):
+        return obj.hazard_control_list.count()
+    
+    def get_created_by_name(self, obj):
+        return obj.created_by.name if obj.created_by else None
+
+    def get_supervisor_name(self, obj):
+        return obj.supervisor.name if obj.supervisor else None
 
     def create(self, validated_data):
         print(validated_data)
@@ -117,13 +142,28 @@ class GetHazardControlSerializer(serializers.ModelSerializer):
         model = HazardControl
         fields = ['id', 'hazard_description']
 
-class GetTaskSerializer(serializers.ModelSerializer):
+class TaskDetialSerializer(serializers.ModelSerializer):
     # serializers.ManyRelatedField
-    created_by =  EmployeeSerializer()
-    hazard = HazardControlSerializer(many=True)
-    other_workers = EmployeeSerializer(many=True)
-    supervisor = EmployeeSerializer()
+    created_by = EmployeeSerializer(read_only=True)
+    hazard_control_list = HazardControlInputSerializer(many=True, read_only=True)
+    other_workers = EmployeeSerializer(many=True, read_only=True)
+    supervisor = EmployeeSerializer(read_only=True)
 
     class Meta:
+
+
+
         model = Task
-        fields = '__all__'
+        fields =  ['id','task_name', 'location', 'created_by', 
+                   'other_workers','supervisor', 
+                   'hazard_control_list', 'question_empolyee', 'question_competency', 
+                   'question_tools_and_equip', 'question_5A', 'question_5B', 'question_5C',
+                    'question_5D', 'question_5E']
+
+
+        extra_kwargs = {
+            'created_by': {'read_only': True},
+            'hazard_control_list': {'read_only': True},
+            'other_workers': {'read_only': True},
+            'supervisor': {'read_only': True},
+        }
