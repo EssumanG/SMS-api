@@ -14,7 +14,7 @@ class CreateListView(GenericAPIView):
     serializer_class = IncidentReportSerializer
     queryset = IncidentReport.objects.all()
 
-    def get(self):
+    def get(self, request):
         reports = self.get_queryset()
 
         serializer = self.serializer_class(reports, many = True)

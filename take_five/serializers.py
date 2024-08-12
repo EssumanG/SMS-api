@@ -76,10 +76,12 @@ class TaskSerializer(serializers.ModelSerializer):
 
     created_by_name = serializers.SerializerMethodField()
     supervisor_name = serializers.SerializerMethodField()
+    department = serializers.SerializerMethodField()
+
 
     class Meta:
         model = Task
-        fields =  ['id','task_name', 'location', 'created_by_name', 
+        fields =  ['id','task_name', 'location', 'created_by_name', 'department',
                    'created_by_id', 'other_workers_id','supervisor_name', 
                    'supervisor_id', 'hazard_control_list_id', 
                    'question_empolyee', 'question_competency', 'question_tools_and_equip', 
@@ -90,14 +92,17 @@ class TaskSerializer(serializers.ModelSerializer):
         # extra_kwargs = {
         #     'created_by': {'read_only': True},
         #     'hazard_control_list': {'read_only': True},
-        #     # 'other_workers': {'read_only': True},
-        #     # 'supervisor': {'read_only': True},
+        #     'other_workers': {'read_only': True},
+        #     'supervisor': {'read_only': True},
         #     'other_workers_count': {'read_only': True},
         #     'hazard_control_count': {'read_only': True},
         # }
     
     def get_other_workers_count(self, obj):
         return obj.other_workers.count()
+    
+    def get_department(self, obj):
+        return obj.created_by.department if obj.created_by else None
 
     def get_hazard_control_count(self, obj):
         return obj.hazard_control_list.count()
