@@ -1,15 +1,15 @@
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
-from .serializers import IncidentReportSerializer
+from .serializers import IncidentReportSerializer, IncidentReportDetailSerialzer
 from .models import IncidentReport
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, mixins
 import datetime
 
 
 
 # Create your views here.
-class CreateListView(GenericAPIView):
+class CreateListReportView(GenericAPIView):
 
     serializer_class = IncidentReportSerializer
     queryset = IncidentReport.objects.all()
@@ -40,3 +40,16 @@ class CreateListView(GenericAPIView):
             return Response( serializer.data, status=status.HTTP_201_CREATED)
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+class ReportDetailView(mixins.RetrieveModelMixin, mixins.DestroyModelMixin, GenericAPIView):
+    queryset = IncidentReport.objects.all()
+    serializer_class = IncidentReportDetailSerialzer
+    lookup_field = 'id'
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)  

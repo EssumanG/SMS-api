@@ -3,6 +3,8 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.CreateListView.as_view()),
+    path('all/', views.CreateListReportView.as_view()),
+    path('detail/<str:id>', views.ReportDetailView.as_view()),
+
     
 ]

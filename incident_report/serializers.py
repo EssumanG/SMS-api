@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import IncidentReport
 from employee.models import Employee
+from employee.serializers import EmployeeSerializer
 
 class IncidentReportSerializer(serializers.ModelSerializer):
 
@@ -19,3 +20,16 @@ class IncidentReportSerializer(serializers.ModelSerializer):
     
     def get_department(self, obj):
         return obj.reporter.department if obj.reporter else None
+    
+
+class IncidentReportDetailSerialzer(serializers.ModelSerializer):
+    reporter = EmployeeSerializer(read_only=True)
+
+
+    class Meta:
+        model = IncidentReport
+        fields = '__all__'
+
+        # extra_kwards = {'repoerter_name':{'read_only': True}}
+
+

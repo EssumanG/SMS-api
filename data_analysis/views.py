@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import status
 from django.db.models import Count, Q
 
-from .serializers import DepartmentStatsSerializer
+from .serializers import DepartmentStatsSerializer, IncidentReportTrendSerializer
 
 from employee.models import Employee
 from take_five.models import Task
@@ -46,4 +47,15 @@ class DepartmentStatsView(APIView):
 
         # Serialize the complete statistics
         serializer = DepartmentStatsSerializer(complete_stats, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data,  status=status.HTTP_200_OK)
+    
+
+class IncidentReportTrendView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        # Group IncidentReports by the date_of_incident and count them
+        queryset = IncidentReport.objects.values('date_of_incident').annotate(incident_count=Count('id')).order_by('date_of_incident')
+
+        serializer = IncidentReportTrendSerializer(queryset, many=True)
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
