@@ -13,3 +13,6 @@ class IncidentReport(models.Model):
     date_created = models.DateField(default=datetime.datetime.now)
     statement = models.TextField()
     reporter = models.ForeignKey(Employee, models.SET_NULL, null=True, related_name='reporter')
+
+    class Meta:
+        ordering = ['date_of_incident']

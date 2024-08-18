@@ -8,6 +8,9 @@ class Control(models.Model):
     id = models.UUIDField(primary_key=True,default=uuid.uuid4, editable=False)
     control_description = models.CharField(max_length=100, null=False)
 
+    class Meta:
+        ordering = ['control_description']
+
     def __repr__(self) -> str:
         return self.control_description
     
@@ -20,6 +23,9 @@ class HazardControl(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     hazard_description = models.CharField(max_length=100, null=False)
     control = models.ManyToManyField(Control)
+
+    class Meta:
+        ordering = ['hazard_description']
 
     def __repr__(self) -> str:
         return self.hazard_description
@@ -46,6 +52,9 @@ class Task(models.Model):
     question_5D = models.BooleanField(null=True)
     question_5E = models.BooleanField(null=True)
     date_created = models.DateField(default=datetime.datetime.now)
+
+    class Meta:
+        ordering = ['date_created']
 
 
 

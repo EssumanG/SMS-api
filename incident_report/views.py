@@ -3,7 +3,7 @@ from rest_framework.generics import GenericAPIView
 from .serializers import IncidentReportSerializer, IncidentReportDetailSerialzer
 from .models import IncidentReport
 from rest_framework.response import Response
-from rest_framework import status, mixins
+from rest_framework import status, mixins, filters
 from rest_framework.pagination import PageNumberPagination
 import datetime
 
@@ -15,9 +15,11 @@ class CreateListReportView(GenericAPIView):
     serializer_class = IncidentReportSerializer
     queryset = IncidentReport.objects.all()
     pagination_class = PageNumberPagination
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['location', 'reporter__name', 'reporter__employee_number', 'reporter__department']
 
     def get(self, request):
-        reports = self.get_queryset()
+        reports = self.filter_queryset(self.get_queryset())
 
         page = self.paginate_queryset(reports)
 
