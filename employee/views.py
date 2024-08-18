@@ -4,13 +4,15 @@ from rest_framework.generics import GenericAPIView
 from .serializers import *
 from .models import *
 from rest_framework.response import Response
-from rest_framework import status, mixins, generics, viewsets
+from rest_framework import status, mixins, generics, viewsets, filters
 # Create your views here.
 
 
 class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'email', 'department', 'employee_number']
 
     def get(self):
         employees = self.get_queryset()

@@ -4,6 +4,7 @@ from .serializers import IncidentReportSerializer, IncidentReportDetailSerialzer
 from .models import IncidentReport
 from rest_framework.response import Response
 from rest_framework import status, mixins
+from rest_framework.pagination import PageNumberPagination
 import datetime
 
 
@@ -13,11 +14,18 @@ class CreateListReportView(GenericAPIView):
 
     serializer_class = IncidentReportSerializer
     queryset = IncidentReport.objects.all()
+    pagination_class = PageNumberPagination
 
     def get(self, request):
         reports = self.get_queryset()
 
-        serializer = self.serializer_class(reports, many = True)
+        page = self.paginate_queryset(reports)
+
+        if page is not None:
+            serializer = self.serializer_class(page, many = True)
+            return self.get_paginated_response(serializer.data)
+        
+        serializer = self.serializer_class(reports, many=True)
         response = {
             "msg": "lists of all incident Reports",
             "total": len(serializer.data),
