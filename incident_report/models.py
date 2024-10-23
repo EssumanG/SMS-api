@@ -1,3 +1,4 @@
+from importlib.metadata import files
 from django.db import models
 import uuid
 import datetime
@@ -13,6 +14,7 @@ class IncidentReport(models.Model):
     date_created = models.DateField(default=datetime.datetime.now)
     statement = models.TextField()
     reporter = models.ForeignKey(Employee, models.SET_NULL, null=True, related_name='reporter')
+    image = models.ImageField(upload_to='incidents_reports', null=True)
 
     class Meta:
         ordering = ['date_of_incident']

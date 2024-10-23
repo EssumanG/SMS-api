@@ -51,7 +51,7 @@ class Task(models.Model):
     question_5C = models.BooleanField(null=True)
     question_5D = models.BooleanField(null=True)
     question_5E = models.BooleanField(null=True)
-    date_created = models.DateField(default=datetime.datetime.now)
+    date_created = models.DateField(default=datetime.date.today)
 
     class Meta:
         ordering = ['date_created']

@@ -7,4 +7,5 @@ urlpatterns = [
     path('task/<str:id>/', views.TaskDetailView.as_view()),
     path('hazards/', views.CreateListHazard.as_view()),
     path('controls/', views.CreateListControl.as_view()),
+    path('employee/<str:id>/tasks/', views.EmployeeTasksById.as_view()),
 ]  

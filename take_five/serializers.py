@@ -86,7 +86,7 @@ class TaskSerializer(serializers.ModelSerializer):
                    'supervisor_id', 'hazard_control_list_id', 
                    'question_empolyee', 'question_competency', 'question_tools_and_equip', 
                    'question_5A', 'question_5B', 'question_5C', 'question_5D', 'question_5E',
-                   'other_workers_count', 'hazard_control_count']
+                   'other_workers_count', 'hazard_control_count', 'date_created']
         # fields =  ['id','task_name', 'location', 'created_by', 'other_workers','supervisor', 'hazard_control_list', 'question_empolyee', 'question_competency', 'question_tools_and_equip', 'question_5A', 'question_5B', 'question_5C', 'question_5D', 'question_5E']
         
         # extra_kwargs = {

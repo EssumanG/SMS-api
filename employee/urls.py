@@ -17,7 +17,7 @@ employee_detail = EmployeeViewSet.as_view({
 
 
 urlpatterns = [
-    path('', employee_list, name='employee_list'),
+    path('all/', employee_list, name='employee_list'),
     path("<str:pk>/", employee_detail, name= 'employee_detail'),
 ]
     

@@ -1,8 +1,12 @@
+from ast import In
+import stat
+from turtle import st
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Count, Q
+from django.db import connection
 
 from .serializers import DepartmentStatsSerializer, IncidentReportTrendSerializer
 
@@ -59,3 +63,21 @@ class IncidentReportTrendView(APIView):
         serializer = IncidentReportTrendSerializer(queryset, many=True)
         
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class DashboardView(APIView):
+    
+    def get(self, request, *args, **kwargs):
+        # cursor = connection.cursor()
+
+        incident_report_count = IncidentReport.objects.count()
+        take_five_count = Task.objects.count()
+        employee_count = Employee.objects.count()
+
+        print(incident_report_count)
+
+        return Response({"incident_report_count": incident_report_count,
+                         "take_five_count": take_five_count,
+                         "employee_count": employee_count                         
+                         }, status=status.HTTP_200_OK)
+
+        
