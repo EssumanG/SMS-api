@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,7 +32,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -41,10 +42,15 @@ INSTALLED_APPS = [
     "corsheaders",
 
     'rest_framework',
+    'rest_framework_simplejwt',
+    
     'take_five',
     'incident_report',
     'employee',
     'data_analysis',
+    'authUsers'
+
+
     
 ]
 
@@ -52,6 +58,23 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 5,
     # 'DEFAULAT_FILTER_BACKENDS': ['djngo_filters.']
+    'DEFAULT_PERMISSION_CLASSES' : [
+        # 'rest_framework.permission.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES' : [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+    ]
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKN_LIFETIME': timedelta(minutes=20),
+    'SEEDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    'SEEDING_TOKEN_LIFETIME': timedelta(days=10),
+    'SEEDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),
+    'SEEDING_TOKEN_LIFETIMELATE_USER': timedelta(days=1),
+
 }
 
 MIDDLEWARE = [
@@ -101,13 +124,15 @@ WSGI_APPLICATION = 'api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'sms_db',
+        'NAME': 'test_sms_db',
         'USER': 'postgres',
         'PASSWORD': 'kojo1234',
         'HOST': '127.0.0.1',
         'PORT': '5432'
     }
 }
+
+AUTH_USER_MODEL="authUsers.AuthUser"
 
 
 # Password validation

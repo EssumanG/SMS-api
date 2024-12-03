@@ -8,4 +8,4 @@ urlpatterns = [
     path('hazards/', views.CreateListHazard.as_view()),
     path('controls/', views.CreateListControl.as_view()),
     path('employee/<str:id>/tasks/', views.EmployeeTasksById.as_view()),
-]  
+]   

@@ -7,6 +7,8 @@ from rest_framework import status, mixins, generics, filters
 from django_filters import rest_framework as djangoFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 
 class TaskFilter(djangoFilter.FilterSet):
     other_workers = djangoFilter.CharFilter(method='filter_other_workers')
@@ -21,6 +23,9 @@ class TaskFilter(djangoFilter.FilterSet):
 
 # Create your views here.
 class CreateListTask(GenericAPIView):
+
+    # authentication_classes = [SessionAuthentication, BasicAuthentication]
+    # permission_classes = [AllowAny]
 
     serializer_class = TaskSerializer 
     queryset = Task.objects.all()
