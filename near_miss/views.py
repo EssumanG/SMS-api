@@ -1,8 +1,10 @@
+from django.shortcuts import render
 
+# Create your views here.
 from django.shortcuts import render
 from rest_framework.generics import GenericAPIView
-from .serializers import IncidentReportSerializer, IncidentReportDetailSerialzer
-from .models import IncidentReport
+from .serializers import NearMissSerializer, NearMissDetailSerialzer
+from .models import NearMiss
 from rest_framework.response import Response
 from rest_framework import status, mixins, filters
 from rest_framework.pagination import PageNumberPagination
@@ -14,14 +16,14 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 
 
 # Create your views here.
-class CreateListReportView(GenericAPIView):
+class CreateListNearMissView(GenericAPIView):
 
-    serializer_class = IncidentReportSerializer
-    queryset = IncidentReport.objects.all()
+    serializer_class = NearMissSerializer
+    queryset = NearMiss.objects.all()
     pagination_class = PageNumberPagination
     filter_backends = [filters.SearchFilter]
     # parser_classes = (MultiPartParser, FormParser)
-    search_fields = ['location', 'reporter__name', 'reporter__employee_number', 'reporter__department']
+    search_fields = ['location', 'reporter__name', 'reporter__department']
 
     authentication_classes = [JWTAuthentication]
     permission_classes = []
@@ -45,7 +47,7 @@ class CreateListReportView(GenericAPIView):
         
         serializer = self.serializer_class(reports, many=True)
         response = {
-            "msg": "lists of all incident Reports",
+            "msg": "lists of all near miss reports",
             "total": len(serializer.data),
             "data": serializer.data
         }
@@ -53,39 +55,37 @@ class CreateListReportView(GenericAPIView):
         return Response(response, status=status.HTTP_200_OK)
     
 
-    def post(self, request):
+    def post(self, request ):
         try:
-            # Use request.data directly for better flexibility
             data = request.data
-            
-            # Safely convert time_of_incident to a datetime.time object
-            # time_of_incident_str = data.get('time_of_incident')
+        
+            # time_of_incident_str = data.get('time')
             # if time_of_incident_str:
             #     try:
             #         time_of_incident = datetime.datetime.strptime(time_of_incident_str, '%H:%M').time()
-            #         data['time_of_incident'] = time_of_incident
+            #         data['time'] = time_of_incident
             #     except ValueError:
             #         return Response(
             #             {"time": "Invalid time format, should be HH:MM"},
             #             status=status.HTTP_400_BAD_REQUEST,
             #         )
 
-            # Validate and save the data with the serializer
-            serializer = self.serializer_class(data=data)
+            serializer = self.serializer_class(data=request.data)
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+                return Response( serializer.data, status=status.HTTP_201_CREATED)
+                
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
         except Exception as e:
             # Handle unexpected errors gracefully
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
 
 
-class ReportDetailView(mixins.RetrieveModelMixin, mixins.DestroyModelMixin, GenericAPIView):
-    queryset = IncidentReport.objects.all()
-    serializer_class = IncidentReportDetailSerialzer
+class NearMissDetailView(mixins.RetrieveModelMixin, mixins.DestroyModelMixin, GenericAPIView):
+    queryset = NearMiss.objects.all()
+    serializer_class = NearMissDetailSerialzer
     lookup_field = 'id'
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated] 
@@ -98,8 +98,8 @@ class ReportDetailView(mixins.RetrieveModelMixin, mixins.DestroyModelMixin, Gene
     
 
 
-class EmployeeIncidentReportById(GenericAPIView):
-    queryset = IncidentReport.objects.all()
+class EmployeeNearMissById(GenericAPIView):
+    queryset = NearMiss.objects.all()
     lookup_field = "id"
     pagination_class = PageNumberPagination
     authentication_classes = [JWTAuthentication]
@@ -111,19 +111,23 @@ class EmployeeIncidentReportById(GenericAPIView):
         if not user_id:
             return Response({"detail": "ID not provided."}, status=status.HTTP_400_BAD_REQUEST)
         
-        # Filter tasks based on the conditions
-        reports = self.queryset.filter(reporter=user_id)  # Ensure no duplicates if a task matches multiple criteria
+        try:
+            # Filter tasks based on the conditions
+            reports = self.queryset.filter(reported_by=user_id)  # Ensure no duplicates if a task matches multiple criteria
 
 
-        reports = reports.order_by('-date_created')
+            reports = reports.order_by('-date_created')
 
-        paginator = self.pagination_class()
-        page = paginator.paginate_queryset(reports, request)
-        if page is not None:
-            serializer = IncidentReportSerializer(page, many=True)
-            return paginator.get_paginated_response(serializer.data)
+            paginator = self.pagination_class()
+            page = paginator.paginate_queryset(reports, request)
+            if page is not None:
+                serializer = NearMissSerializer(page, many=True)
+                return paginator.get_paginated_response(serializer.data)
 
-        
-        # Serialize the filtered tasks
-        serializer = IncidentReportSerializer(reports, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            
+            # Serialize the filtered tasks
+            serializer = NearMissSerializer(reports, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            # Handle unexpected errors gracefully
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -21,18 +21,21 @@ from django.conf.urls.static import static
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
-    TokenRefreshView
+    TokenRefreshView,
+    TokenVerifyView
 )
 
 urlpatterns = [
 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/verify/', TokenVerifyView.as_view(), name='verify_token'),
 
     # path('admin/', admin.site.urls),
     path('take_five/', include('take_five.urls')),
     path('employee/', include('employee.urls')),
     path('incident_reports/', include('incident_report.urls')),
+    path('near_miss/', include('near_miss.urls')),
     path('analysis/', include('data_analysis.urls')),
-    path('auth/', include('authUsers.urls'))
+    path('auth/', include('authUsers.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

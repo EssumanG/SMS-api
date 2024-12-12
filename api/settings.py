@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'take_five',
     'incident_report',
     'employee',
+    'near_miss',
     'data_analysis',
     'authUsers'
 
@@ -69,7 +70,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKN_LIFETIME': timedelta(minutes=20),
+    'ACCESS_TOKN_LIFETIME': timedelta(minutes=60),
     'SEEDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
     'SEEDING_TOKEN_LIFETIME': timedelta(days=10),
     'SEEDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),

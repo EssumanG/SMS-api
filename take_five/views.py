@@ -9,6 +9,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class TaskFilter(djangoFilter.FilterSet):
     other_workers = djangoFilter.CharFilter(method='filter_other_workers')
@@ -24,8 +25,8 @@ class TaskFilter(djangoFilter.FilterSet):
 # Create your views here.
 class CreateListTask(GenericAPIView):
 
-    # authentication_classes = [SessionAuthentication, BasicAuthentication]
-    # permission_classes = [AllowAny]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [] 
 
     serializer_class = TaskSerializer 
     queryset = Task.objects.all()
@@ -35,6 +36,14 @@ class CreateListTask(GenericAPIView):
     
     # empolyee_queryset = Employee.objects.all()
     # hazard_queryset = HazardControl.objects.all()
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            # Require authentication for GET
+            return [IsAuthenticated()]
+        # Allow unrestricted access for other methods
+        return [AllowAny()]
+
 
     def get(self, request):
         tasks = self.filter_queryset(self.get_queryset())
@@ -76,6 +85,9 @@ class TaskDetailView(mixins.RetrieveModelMixin, mixins.DestroyModelMixin, Generi
     serializer_class = TaskDetialSerializer
     lookup_field = 'id'
 
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated] 
+
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
@@ -83,6 +95,10 @@ class TaskDetailView(mixins.RetrieveModelMixin, mixins.DestroyModelMixin, Generi
         return self.destroy(request, *args, **kwargs) 
 
 class EmployeeTasksById(GenericAPIView):
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated] 
+    
     queryset = Task.objects.all()
     lookup_field = "id"
     filter_backends = [filters.SearchFilter]
@@ -115,6 +131,8 @@ class EmployeeTasksById(GenericAPIView):
 
 
 class CreateListHazard(mixins.ListModelMixin, mixins.CreateModelMixin, GenericAPIView):
+
+    permission_classes = [AllowAny] 
     queryset = HazardControl.objects.all()
     serializer_class = GetHazardControlSerializer
     filter_backends = [filters.SearchFilter]
@@ -130,6 +148,8 @@ class CreateListHazard(mixins.ListModelMixin, mixins.CreateModelMixin, GenericAP
         return self.create(request, *args, **kwargs)
     
 class CreateListControl(mixins.ListModelMixin, mixins.CreateModelMixin, GenericAPIView):
+
+    permission_classes = [AllowAny] 
     queryset = Control.objects.all()
     serializer_class = ControlSerializer
     filter_backends = [filters.SearchFilter]
