@@ -41,6 +41,7 @@ class AuthUser(AbstractBaseUser,  PermissionsMixin):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
     is_staff = models.BooleanField(default=True)
+    is_superuser = models.BooleanField(default=False)
 
     objects = UserManager()
 

@@ -10,6 +10,7 @@ from django.db import connection
 from rest_framework.permissions import IsAuthenticated
 from .serializers import DepartmentStatsSerializer, IncidentReportTrendSerializer
 
+from near_miss.models import NearMiss
 from employee.models import Employee
 from take_five.models import Task
 from incident_report.models import IncidentReport
@@ -63,6 +64,7 @@ class IncidentReportTrendView(APIView):
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    
 
     def get(self, request, *args, **kwargs):
         # Group IncidentReports by the date_of_incident and count them
@@ -83,12 +85,14 @@ class DashboardView(APIView):
         incident_report_count = IncidentReport.objects.count()
         take_five_count = Task.objects.count()
         employee_count = Employee.objects.count()
+        near_miss_count = NearMiss.objects.count()
 
         print(incident_report_count)
 
         return Response({"incident_report_count": incident_report_count,
                          "take_five_count": take_five_count,
-                         "employee_count": employee_count                         
+                         "employee_count": employee_count,
+                         "near_miss_count": near_miss_count                       
                          }, status=status.HTTP_200_OK)
 
         

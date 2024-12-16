@@ -70,11 +70,11 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKN_LIFETIME': timedelta(minutes=60),
-    'SEEDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'SEEDING_TOKEN_REFRESH_LIFETIME': timedelta(days=7),
     'SEEDING_TOKEN_LIFETIME': timedelta(days=10),
-    'SEEDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),
-    'SEEDING_TOKEN_LIFETIMELATE_USER': timedelta(days=1),
+    'SEEDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=7),
+    'SEEDING_TOKEN_LIFETIMELATE_USER': timedelta(days=7),
 
 }
 
@@ -174,9 +174,9 @@ STATIC_URL = 'static/'
 
 
 
-# MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = BASE_DIR / 'media'
 
-# MEDIA_URL = '/media/'
+MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
